@@ -27,20 +27,20 @@ module CloudNaturalLanguage
       https.request(req)
     end
 
-    def analyze_entities(content, lang = 'EN')
+    def analyze_entities(content)
       uri = build_uri(ANALYZE_ENTITIES_PATH)
-      body = document(content, lang).merge(encodingType: 'UTF8').to_json
+      body = document(content).merge(encodingType: 'UTF8').to_json
       post(uri, body).body
     end
 
-    def analyze_sentiment(content, lang = 'EN')
+    def analyze_sentiment(content)
       uri = build_uri(ANALYZE_SENTIMENT_PATH)
-      post(uri, document(content, lang).to_json).body
+      post(uri, document(content).to_json).body
     end
 
-    def annotate_text(content, lang = 'EN', opts = {})
+    def annotate_text(content, opts = {})
       uri = build_uri(ANNOTATE_TEXT_PATH)
-      body = document(content, lang)
+      body = document(content)
         .merge(features(opts))
         .merge(encodingType: 'UTF8')
         .to_json
@@ -62,11 +62,10 @@ module CloudNaturalLanguage
       "key=#{api_key}"
     end
 
-    def document(content, lang)
+    def document(content)
       {
         document: {
           type: 'PLAIN_TEXT',
-          language: lang,
           content: content
         }
       }
